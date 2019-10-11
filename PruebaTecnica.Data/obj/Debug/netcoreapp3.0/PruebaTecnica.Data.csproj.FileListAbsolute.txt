@@ -1,0 +1,8 @@
+C:\Users\padil\Documents\Project\PruebaTecnica\PruebaTecnica.Data\bin\Debug\netcoreapp3.0\PruebaTecnica.Data.deps.json
+C:\Users\padil\Documents\Project\PruebaTecnica\PruebaTecnica.Data\bin\Debug\netcoreapp3.0\PruebaTecnica.Data.dll
+C:\Users\padil\Documents\Project\PruebaTecnica\PruebaTecnica.Data\obj\Debug\netcoreapp3.0\PruebaTecnica.Data.csprojAssemblyReference.cache
+C:\Users\padil\Documents\Project\PruebaTecnica\PruebaTecnica.Data\obj\Debug\netcoreapp3.0\PruebaTecnica.Data.AssemblyInfoInputs.cache
+C:\Users\padil\Documents\Project\PruebaTecnica\PruebaTecnica.Data\obj\Debug\netcoreapp3.0\PruebaTecnica.Data.AssemblyInfo.cs
+C:\Users\padil\Documents\Project\PruebaTecnica\PruebaTecnica.Data\bin\Debug\netcoreapp3.0\PruebaTecnica.Data.pdb
+C:\Users\padil\Documents\Project\PruebaTecnica\PruebaTecnica.Data\obj\Debug\netcoreapp3.0\PruebaTecnica.Data.dll
+C:\Users\padil\Documents\Project\PruebaTecnica\PruebaTecnica.Data\obj\Debug\netcoreapp3.0\PruebaTecnica.Data.pdb
