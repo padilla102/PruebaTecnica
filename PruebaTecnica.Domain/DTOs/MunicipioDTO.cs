@@ -1,14 +1,13 @@
-﻿using System;
+﻿using PruebaTecnica.Data.Entities;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace PruebaTecnica.Data.Entities
+namespace PruebaTecnica.Domain.DTOs
 {
-    public class Municipio
+    public class MunicipioDTO
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public int status { get; set; }
         public int RegionId { get; set; }

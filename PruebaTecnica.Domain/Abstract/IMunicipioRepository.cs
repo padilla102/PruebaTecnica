@@ -9,9 +9,8 @@ namespace PruebaTecnica.Domain.Abstract
     {
         IEnumerable<Municipio> List();
         Municipio Get(int id);
-        bool Create(Municipio municipio);
-        bool Edit(Municipio municipio);
-        bool Delete(int id);
+        void Save(Municipio municipio);
+        Municipio Delete(int id);
 
     }
 }

@@ -12,6 +12,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using PruebaTecnica.Data.Context;
 using Microsoft.AspNetCore.Mvc;
+using PruebaTecnica.Domain.Abstract;
+using PruebaTecnica.Domain.Implements;
+using AutoMapper;
+using PruebaTecnica.Domain.DTOs;
 
 namespace PruebaTecnica.WebUI
 {
@@ -27,10 +31,21 @@ namespace PruebaTecnica.WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddControllersWithViews();
 
-            services.AddDbContext<Context>(
+            services.AddDbContext<ApplicationDbContext>(
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<IMunicipioRepository, MunicipioRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
                 //.AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
@@ -50,7 +65,7 @@ namespace PruebaTecnica.WebUI
                 app.UseHsts();
             }
 
-            SeedDatabase.Initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
+            
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -63,8 +78,10 @@ namespace PruebaTecnica.WebUI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Municipio}/{action=List}/{id?}");
             });
+
+            SeedDatabase.Initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
         }
     }
 }

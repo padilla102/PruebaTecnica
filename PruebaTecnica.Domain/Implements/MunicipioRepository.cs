@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using PruebaTecnica.Data.Context;
 using PruebaTecnica.Data.Entities;
 using PruebaTecnica.Domain.Abstract;
@@ -11,33 +12,31 @@ namespace PruebaTecnica.Domain.Implements
 {
     public class MunicipioRepository : IMunicipioRepository
     {
-        private readonly Context context;
-        public MunicipioRepository(IServiceProvider service)
+        private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
+        public MunicipioRepository(IServiceProvider service, IMapper mapper)
         {
-            this.context = service.GetRequiredService<Context>();
-        }
-        public bool Create(Municipio municipio)
-        {
-            try
-            {
-                context.Municipio.Add(municipio);
-                context.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            this.context = service.GetRequiredService<ApplicationDbContext>();
+            this.mapper = mapper;
         }
 
-        public bool Delete(int id)
+        public Municipio Delete(int id)
         {
             try
             {
                 var m = context.Municipio.Find(id);
-                context.Municipio.Remove(m);
-                context.SaveChanges();
-                return true;
+                if (m != null)
+                {
+                    context.Municipio.Remove(m);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Municipio no encotrado");
+                }
+
+                return m;
+
             }
             catch (Exception ex)
             {
@@ -46,17 +45,27 @@ namespace PruebaTecnica.Domain.Implements
             }
         }
 
-        public bool Edit(Municipio municipio)
+        public void Save(Municipio municipio)
         {
             try
             {
-
-                var m = context.Municipio.Find(municipio.Id);
-                m.Name = municipio.Name;
-                m.status = municipio.status;
-                var result = context.SaveChanges();
-
-                return true;
+                if (municipio.Id == null)
+                {
+                    context.Municipio.Add(municipio);
+                }
+                else
+                {
+                    var m = context.Municipio.Find(municipio.Id);
+                    if (m != null)
+                    {
+                        m.Name = municipio.Name;
+                        m.status = municipio.status;
+                        m.RegionId = 1;
+                        //m.Region = new Region { Id = 1, Name = "Andina", Municipios = null };
+                    }
+                }
+                context.SaveChanges();
+                
             }
             catch (Exception ex)
             {
@@ -68,11 +77,11 @@ namespace PruebaTecnica.Domain.Implements
         {
             try
             {
-                return context.Municipio.Find(id);
+                var m = context.Municipio.Find(id);
+                return m!= null ? m: throw new Exception("Municipio no encotrado");
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
