@@ -1,0 +1,57 @@
+﻿@model RegionListViewModel
+
+@{
+    ViewData["Title"] = "Lista Regiones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Lista Regiones</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="text-center">
+                Codigo
+            </th>
+            <th class="text-left">
+                Nombre
+            </th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Regions)
+        {
+            <tr>
+                <td class="text-center">@item.Id</td>
+                <td class="text-left">@item.Name</td>
+                <td>
+                    <form asp-action="Delete" method="post">
+                        <a asp-action="Edit" class="btn btn-sm btn-warning"
+                           asp-route-id="@item.Id">
+                            Editar
+                        </a>
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="3">
+                <div page-model="@Model.PagingInfo" page-action="List" page-classes-enabled="true"
+                     page-class="btn" page-class-normal="btn-secondary"
+                     page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>
+            </td>
+        </tr>
+
+
+    </tbody>
+
+</table>
+<div class="text-center">
+    <a asp-action="Create" class="btn btn-primary">Agregar Municipio</a>
+</div>

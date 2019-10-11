@@ -46,6 +46,7 @@ namespace PruebaTecnica.WebUI
                  options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IMunicipioRepository, MunicipioRepository>();
+            services.AddTransient<IRegionRepository,RegionRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
                 //.AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
