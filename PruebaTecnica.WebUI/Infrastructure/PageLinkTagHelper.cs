@@ -29,8 +29,7 @@ namespace PruebaTecnica.WebUI.Infrastructure
         public string PageClassNormal { get; set; }
         public string PageClassSelected { get; set; }
 
-        public override void Process(TagHelperContext context,
-TagHelperOutput output)
+        public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
             TagBuilder result = new TagBuilder("div");
@@ -38,7 +37,7 @@ TagHelperOutput output)
             {
                 TagBuilder tag = new TagBuilder("a");
                 tag.Attributes["href"] = urlHelper.Action(PageAction,
-                new { productPage = i });
+                new { page = i });
                 if (PageClassesEnabled)
                 {
                     tag.AddCssClass(PageClass);

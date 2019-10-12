@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PruebaTecnica.Data.Context;
 using PruebaTecnica.Data.Entities;
@@ -74,7 +75,9 @@ namespace PruebaTecnica.Domain.Implements
         {
             try
             {
-                var r = context.Region.Find(id);
+                var r = context.Region
+                    .Include(m => m.Municipios)
+                    .FirstOrDefault(r => r.Id == id);
                 return r != null ? r : throw new Exception("Region no encotrado");
             }
             catch (Exception ex)

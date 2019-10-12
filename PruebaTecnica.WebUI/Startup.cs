@@ -43,13 +43,15 @@ namespace PruebaTecnica.WebUI
             services.AddControllersWithViews();
 
             services.AddDbContext<ApplicationDbContext>(
-                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                 options => options.UseSqlServer(Configuration.GetConnectionString("AzureConnection")));
 
             services.AddTransient<IMunicipioRepository, MunicipioRepository>();
             services.AddTransient<IRegionRepository,RegionRepository>();
+            services.AddTransient<IStatusRepository, StatusRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-                //.AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //.AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,13 +63,10 @@ namespace PruebaTecnica.WebUI
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Municipio/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -75,14 +74,30 @@ namespace PruebaTecnica.WebUI
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Municipio}/{action=List}/{id?}");
+            app.UseMvc(routes => {
+                routes.MapRoute(
+                name: "paginationMunicipio",
+                template: "Municipio/Page{page}",
+                defaults: new { Controller = "Municipio", action = "List" });
+
+                routes.MapRoute(
+                name: "paginationRegion",
+                template: "Region/Page{page}",
+                defaults: new { Controller = "Region", action = "List" });
+
+                routes.MapRoute(
+                name: "default",
+                template: "{controller=Municipio}/{action=List}/{id?}");
             });
 
-            SeedDatabase.Initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllerRoute(
+            //        name: "default",
+            //        pattern: "{controller=Municipio}/{action=List}/{id?}");
+            //});
+
+            //SeedDatabase.Initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
         }
     }
 }

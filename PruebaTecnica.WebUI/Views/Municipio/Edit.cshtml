@@ -1,20 +1,19 @@
-﻿@model MunicipioViewModel
+﻿@model PruebaTecnica.WebUI.Models.MunicipioViewModel
 
 @{
-    ViewData["Title"] = "Editar";
+    ViewData["Title"] = "Editar Municipio";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Editar Municipio</h1>
 
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label class="control-label"> Codigo</label>
-                <input asp-for="Municipio.Id" class="form-control" readonly/>
+                <input asp-for="Municipio.Id" class="form-control" readonly />
                 <span asp-validation-for="Municipio.Id" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -24,21 +23,20 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Estado</label>
-                @Html.DropDownListFor(m => m.Municipio.status,Model.ListStatus,"Seleccione",
-                new { @class = "form-control" })
-                <span asp-validation-for="Municipio.status" class="text-danger"></span>
+                @Html.DropDownListFor(m => m.Municipio.StatusId, new SelectList(Model.ListStatus, "Id", "Name", Model.Municipio.StatusId), new { @class = "form-control" })
+                <span asp-validation-for="Municipio.StatusId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label class="control-label">Región</label>
+                @Html.DropDownListFor(m => m.Municipio.RegionId, new SelectList(Model.ListRegions, "Id", "Name", Model.Municipio.RegionId),"Seleccione", new { @class = "form-control" })
+                <span asp-validation-for="Municipio.RegionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                @Html.ActionLink("Regresar", "List", new { @class = "btn btn-dark" })
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="List">Regresar</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

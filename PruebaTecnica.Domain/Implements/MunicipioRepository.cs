@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PruebaTecnica.Data.Context;
 using PruebaTecnica.Data.Entities;
@@ -59,9 +60,8 @@ namespace PruebaTecnica.Domain.Implements
                     if (m != null)
                     {
                         m.Name = municipio.Name;
-                        m.status = municipio.status;
-                        m.RegionId = 1;
-                        //m.Region = new Region { Id = 1, Name = "Andina", Municipios = null };
+                        m.StatusId = municipio.StatusId;
+                        m.RegionId = municipio.RegionId;
                     }
                 }
                 context.SaveChanges();
@@ -90,7 +90,7 @@ namespace PruebaTecnica.Domain.Implements
         {
             try
             {
-                return context.Municipio.ToList();
+                return context.Municipio.Include(x =>x.Status).Include(r=>r.Region).ToList();
             }
             catch (Exception ex)
             {

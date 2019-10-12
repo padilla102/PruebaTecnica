@@ -9,18 +9,8 @@ namespace PruebaTecnica.WebUI.Models
 {
     public class MunicipioViewModel
     {
-        public Municipio Municipio { get; set; }
-        public IEnumerable<SelectListItem> ListStatus {
-            get
-            {
-                return Enum.GetNames(typeof(Status)).Select(e => new SelectListItem() { Text = e, Value = e });
-            }
-        }
-    }
-
-    public enum Status
-    {
-        Activo = 1,
-        Inactivo = 0
+        public Municipio Municipio { get; set; }    
+        public IEnumerable<Status> ListStatus { get; set; }
+        public IEnumerable<Region> ListRegions { get; set; }
     }
 }

@@ -15,28 +15,34 @@ namespace PruebaTecnica.WebUI.Controllers
     public class MunicipioController : Controller
     {
         private readonly IMunicipioRepository repository;
+        private readonly IStatusRepository repoStatus;
+        private readonly IRegionRepository repoRegion;
         public int PageSize = 5;
 
-        public MunicipioController(IMunicipioRepository repository)
+        public MunicipioController(IMunicipioRepository repository, IStatusRepository repoStatus, IRegionRepository repoRegion)
         {
             this.repository = repository;
+            this.repoStatus = repoStatus;
+            this.repoRegion = repoRegion;
         }
 
         // GET: Municipio
-        public ActionResult List(int municipioPage = 1)
+        [HttpGet]
+        public ActionResult List(int page = 1)
         {
             try
             {
                 var list = repository.List();
+
                 return View(new MunicipioListViewModel
                 {
                     Municipios = list
                                 .OrderBy(p => p.Id)
-                                .Skip((municipioPage - 1) * PageSize)
+                                .Skip((page - 1) * PageSize)
                                 .Take(PageSize),
                     PagingInfo = new PagingInfo
                     {
-                        CurrentPage = municipioPage,
+                        CurrentPage = page,
                         ItemsPerPage = PageSize,
                         TotalItems = list.Count()
                     }
@@ -54,7 +60,23 @@ namespace PruebaTecnica.WebUI.Controllers
         // GET: Municipio/Create
         public ActionResult Create()
         {
-            return View("Edit",new MunicipioViewModel());
+            try
+            {
+                var model = new MunicipioViewModel 
+                {
+                    Municipio = new Municipio(), 
+                    ListStatus = repoStatus.List(),
+                    ListRegions = repoRegion.List()
+                };
+
+                return View("Edit", model);
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = $"Error: {ex.Message}";
+                return View("List");
+            }
+            
         }
 
         // GET: Municipio/Edit/5
@@ -65,14 +87,16 @@ namespace PruebaTecnica.WebUI.Controllers
                 var m = repository.Get(id);
                 MunicipioViewModel vm = new MunicipioViewModel
                 {
-                    Municipio = m
+                    Municipio = m,
+                    ListStatus = repoStatus.List(),
+                    ListRegions = repoRegion.List()
                 };
                 return View(vm);
             }
             catch (Exception ex)
             {
                 TempData["message"] = $"Error: {ex.Message}";
-                return View();
+                return View("List");
             }
             
         }
@@ -80,27 +104,27 @@ namespace PruebaTecnica.WebUI.Controllers
         // POST: Municipio/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Municipio municipio)
+        public ActionResult Edit(MunicipioViewModel model)
         {
             try
             {
+                
                 if (ModelState.IsValid)
                 {
-                    municipio.RegionId = 1;
-                    repository.Save(municipio);
-                    TempData["message"] = $"{municipio.Name} se ha registrado";
+                    repository.Save(model.Municipio);
+                    TempData["message"] = $"{model.Municipio.Name} se ha registrado";
                     return RedirectToAction("List");
                 }
                 else
                 {
                     // there is something wrong with the data values
-                    return View(municipio);
+                    return View(new MunicipioViewModel { Municipio = model.Municipio });
                 }
             }
             catch (Exception ex)
             {
                 TempData["message"] = $"Error: {ex.Message}";
-                return View();
+                return View(model.Municipio);
             }
         }
 
@@ -117,6 +141,12 @@ namespace PruebaTecnica.WebUI.Controllers
                 TempData["message"] = $"Error: {ex.Message}";
                 return View();
             }
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

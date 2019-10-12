@@ -1,4 +1,5 @@
-﻿@model MunicipioListViewModel
+﻿
+@model MunicipioListViewModel
 
 @{
     ViewData["Title"] = "Lista Municipios";
@@ -20,34 +21,38 @@
             <th class="text-center">
                 Estado
             </th>
+            <th class="text-left">
+                Region
+            </th>
             <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Municipios)
         {
-            <tr>
-                <td class="text-center">@item.Id</td>
-                <td class="text-left">@item.Name</td>
-                <td class="text-center">@item.status</td>
-                <td>
-                    <form asp-action="Delete" method="post">
-                        <a asp-action="Edit" class="btn btn-sm btn-warning"
-                           asp-route-id="@item.Id">
-                            Editar
-                        </a>
-                        <input type="hidden" name="id" value="@item.Id" />
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            Eliminar
-                        </button>
-                    </form>
-                </td>
-            </tr>
+        <tr>
+            <td class="text-center">@item.Id</td>
+            <td class="text-left">@item.Name</td>
+            <td class="text-center">@item.Status.Name</td>
+            <td class="text-left">@item.Region.Name</td>
+            <td>
+                <form asp-action="Delete" method="post">
+                    <a asp-action="Edit" class="btn btn-sm btn-warning"
+                       asp-route-id="@item.Id">
+                        Editar
+                    </a>
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
         }
         <tr>
-            <td colspan="3">
+            <td colspan="4" class="text-left">
                 <div page-model="@Model.PagingInfo" page-action="List" page-classes-enabled="true"
-                     page-class="btn" page-class-normal="btn-secondary"
+                     page-class="btn" page-class-normal="btn-secondary" 
                      page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>
             </td>
         </tr>
@@ -59,3 +64,4 @@
 <div class="text-center">
     <a asp-action="Create" class="btn btn-primary">Agregar Municipio</a>
 </div>
+

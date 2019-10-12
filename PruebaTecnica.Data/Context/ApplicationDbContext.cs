@@ -24,5 +24,6 @@ namespace PruebaTecnica.Data.Context
 
         public DbSet<Region> Region { get; set; }
         public DbSet<Municipio> Municipio { get; set; }
+        public DbSet<Status> Status { get; set; }
     }
 }

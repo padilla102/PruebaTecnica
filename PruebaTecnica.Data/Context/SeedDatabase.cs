@@ -14,20 +14,20 @@ namespace PruebaTecnica.Data.Context
         public static void Initialize(IServiceProvider serviceProvider)
         {
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
-            context.Database.EnsureCreated();
+            //context.Database.EnsureCreated();
 
-            if (!context.Region.Any())
-            {
-                context.Municipio.AddRange(
-                    new Municipio { Name = "Municipio1", status = 1 },
-                    new Municipio { Name = "Municipio2", status = 1 },
-                    new Municipio { Name = "Municipio3", status = 1 },
-                    new Municipio { Name = "Municipio4", status = 1 });
+            //if (!context.Region.Any())
+            //{
+            //    context.Municipio.AddRange(
+            //        new Municipio { Name = "Municipio1", status = 1 },
+            //        new Municipio { Name = "Municipio2", status = 1 },
+            //        new Municipio { Name = "Municipio3", status = 1 },
+            //        new Municipio { Name = "Municipio4", status = 1 });
 
 
 
-                context.SaveChanges(); 
-            }
+            //    context.SaveChanges(); 
+            //}
 
 
         }

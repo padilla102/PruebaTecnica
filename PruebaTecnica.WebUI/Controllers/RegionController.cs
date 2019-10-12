@@ -20,20 +20,21 @@ namespace PruebaTecnica.WebUI.Controllers
         }
 
         // GET: Municipio
-        public ActionResult List(int regionPage = 1)
+        public ActionResult List(int page = 1)
         {
             try
             {
                 var list = repository.List();
+
                 return View(new RegionListViewModel
                 {
                     Regions = list
                                 .OrderBy(p => p.Id)
-                                .Skip((regionPage - 1) * PageSize)
+                                .Skip((page - 1) * PageSize)
                                 .Take(PageSize),
                     PagingInfo = new PagingInfo
                     {
-                        CurrentPage = regionPage,
+                        CurrentPage = page,
                         ItemsPerPage = PageSize,
                         TotalItems = list.Count()
                     }
