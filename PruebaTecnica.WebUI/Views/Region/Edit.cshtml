@@ -1,60 +1,26 @@
-﻿@model PruebaTecnica.Data.Entities.Region
+﻿@model PruebaTecnica.WebUI.Models.RegionViewModel
 @{
     ViewData["Title"] = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
+  }
 
-<h1>Editar Region</h1>
+    
 
-<hr />
+<h1>Región</h1>
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label class="control-label"> Codigo</label>
-                <input asp-for="Id" class="form-control" readonly />
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <input asp-for="Region.Id" class="form-control" readonly />
+                <span asp-validation-for="Region.Id" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Nombre</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="text-center">
-                                Codigo
-                            </th>
-                            <th class="text-left">
-                                Nombre
-                            </th>
-                            <th class="text-center">
-                                Estado
-                            </th>
-                            <th class="text-left">
-                                Region
-                            </th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Municipios)
-                        {
-                            <tr>
-                                <td class="text-center">@item.Id</td>
-                                <td class="text-left">@item.Name</td>
-                                <td class="text-center">@item.StatusId</td>
-                                <td class="text-left">@item.Region.Name</td>
-                                <td>
-                                    
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <input asp-for="Region.Name" class="form-control" />
+                <span asp-validation-for="Region.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <a asp-action="List">Regresar</a>
@@ -62,9 +28,92 @@
             </div>
         </form>
     </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label class="control-label">Municipios Vinculados</label>
+            @if (Model.Region.Id == null)
+            {
+                <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#agregarMunicipio" disabled>+</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#agregarMunicipio">+</button>
+            }
+        </div>
+        <div class="form-group">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            Codigo
+                        </th>
+                        <th class="text-left">
+                            Nombre
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model?.Region.RegionMunicipio != null)
+                    {
+                        @foreach (var item in Model?.Region.RegionMunicipio)
+                        {
+                            <tr>
+                                <td class="text-center">@item.Municipio.Id</td>
+                                <td class="text-left">@item.Municipio.Name</td>
+                                <td>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregarMunicipio" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form asp-action="AddMunicipio">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Selecciona un municipio</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label"> Codigo</label>
+                        <input asp-for="Region.Id" class="form-control" readonly />
+                        <span asp-validation-for="Region.Id" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="control-label">Municipios</label>
+                        @Html.DropDownListFor(x => x.MunicipioId,
+                       new SelectList(Model.ListMunicipio, "Id", "Name", 1), "Seleccione",
+                       new { @class = "form-control", @id = "lsMuni" })
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    @*<button type="button" id="btnAgregar" class="btn btn-primary">+</button>*@
+                    <input type="submit" value="Agregar" class="btn btn-primary" />
+                </div>
+                </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
+
+
+
 

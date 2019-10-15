@@ -8,7 +8,7 @@ namespace PruebaTecnica.Data.Entities
     public class Status
     {
         public int Id { get; set; }
-        [StringLength(50)]
+        [StringLength(30)]
         public string Name { get; set; }
     }
 }

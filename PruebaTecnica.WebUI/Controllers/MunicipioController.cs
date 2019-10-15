@@ -16,14 +16,12 @@ namespace PruebaTecnica.WebUI.Controllers
     {
         private readonly IMunicipioRepository repository;
         private readonly IStatusRepository repoStatus;
-        private readonly IRegionRepository repoRegion;
         public int PageSize = 5;
 
-        public MunicipioController(IMunicipioRepository repository, IStatusRepository repoStatus, IRegionRepository repoRegion)
+        public MunicipioController(IMunicipioRepository repository, IStatusRepository repoStatus)
         {
             this.repository = repository;
             this.repoStatus = repoStatus;
-            this.repoRegion = repoRegion;
         }
 
         // GET: Municipio
@@ -34,7 +32,7 @@ namespace PruebaTecnica.WebUI.Controllers
             {
                 var list = repository.List();
 
-                return View(new MunicipioListViewModel
+                var model = new MunicipioListViewModel
                 {
                     Municipios = list
                                 .OrderBy(p => p.Id)
@@ -46,8 +44,8 @@ namespace PruebaTecnica.WebUI.Controllers
                         ItemsPerPage = PageSize,
                         TotalItems = list.Count()
                     }
-                });
-
+                };
+                return View(model);
 
             }
             catch (Exception ex)
@@ -62,11 +60,10 @@ namespace PruebaTecnica.WebUI.Controllers
         {
             try
             {
-                var model = new MunicipioViewModel 
+                var model = new MunicipioViewModel
                 {
-                    Municipio = new Municipio(), 
-                    ListStatus = repoStatus.List(),
-                    ListRegions = repoRegion.List()
+                    Municipio = new Municipio { RegionMunicipio = null },
+                    ListStatus = repoStatus.List()
                 };
 
                 return View("Edit", model);
@@ -88,8 +85,7 @@ namespace PruebaTecnica.WebUI.Controllers
                 MunicipioViewModel vm = new MunicipioViewModel
                 {
                     Municipio = m,
-                    ListStatus = repoStatus.List(),
-                    ListRegions = repoRegion.List()
+                    ListStatus = repoStatus.List()
                 };
                 return View(vm);
             }
@@ -118,7 +114,14 @@ namespace PruebaTecnica.WebUI.Controllers
                 else
                 {
                     // there is something wrong with the data values
-                    return View(new MunicipioViewModel { Municipio = model.Municipio });
+                    
+                        MunicipioViewModel vm = new MunicipioViewModel
+                        {
+                            Municipio = model.Municipio,
+                            ListStatus = repoStatus.List()
+                        };
+                    return View(vm);
+
                 }
             }
             catch (Exception ex)

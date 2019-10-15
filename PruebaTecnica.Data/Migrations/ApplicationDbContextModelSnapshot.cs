@@ -27,18 +27,14 @@ namespace PruebaTecnica.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
-
-                    b.Property<int>("RegionId")
-                        .HasColumnType("int");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RegionId");
 
                     b.HasIndex("StatusId");
 
@@ -53,12 +49,28 @@ namespace PruebaTecnica.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.HasKey("Id");
 
                     b.ToTable("Region");
+                });
+
+            modelBuilder.Entity("PruebaTecnica.Data.Entities.RegionMunicipio", b =>
+                {
+                    b.Property<int>("MunicipioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MunicipioId", "RegionId");
+
+                    b.HasIndex("RegionId");
+
+                    b.ToTable("RegionMunicipio");
                 });
 
             modelBuilder.Entity("PruebaTecnica.Data.Entities.Status", b =>
@@ -69,8 +81,8 @@ namespace PruebaTecnica.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.HasKey("Id");
 
@@ -79,15 +91,24 @@ namespace PruebaTecnica.Data.Migrations
 
             modelBuilder.Entity("PruebaTecnica.Data.Entities.Municipio", b =>
                 {
-                    b.HasOne("PruebaTecnica.Data.Entities.Region", "Region")
-                        .WithMany("Municipios")
-                        .HasForeignKey("RegionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PruebaTecnica.Data.Entities.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PruebaTecnica.Data.Entities.RegionMunicipio", b =>
+                {
+                    b.HasOne("PruebaTecnica.Data.Entities.Municipio", "Municipio")
+                        .WithMany("RegionMunicipio")
+                        .HasForeignKey("MunicipioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PruebaTecnica.Data.Entities.Region", "Region")
+                        .WithMany("RegionMunicipio")
+                        .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

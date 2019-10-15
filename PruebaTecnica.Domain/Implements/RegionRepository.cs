@@ -14,11 +14,11 @@ namespace PruebaTecnica.Domain.Implements
     public class RegionRepository:IRegionRepository
     {
         private readonly ApplicationDbContext context;
-        private readonly IMapper mapper;
-        public RegionRepository(IServiceProvider service, IMapper mapper)
+        
+        public RegionRepository(IServiceProvider service)
         {
             this.context = service.GetRequiredService<ApplicationDbContext>();
-            this.mapper = mapper;
+        
         }
 
         public Region Delete(int id)
@@ -75,9 +75,11 @@ namespace PruebaTecnica.Domain.Implements
         {
             try
             {
-                var r = context.Region
-                    .Include(m => m.Municipios)
-                    .FirstOrDefault(r => r.Id == id);
+                //TODO: Cambiar
+                var r = context.Region.FirstOrDefault(r => r.Id == id);
+
+                r.RegionMunicipio = context.RegionMunicipio.Include(m => m.Municipio).Where(rm => rm.RegionId == r.Id && rm.Municipio.StatusId == 1).ToList();
+                //r.RegionMunicipio.Where(m=m = r.Municipios?.Where(s => s.StatusId == 1).ToList();
                 return r != null ? r : throw new Exception("Region no encotrado");
             }
             catch (Exception ex)

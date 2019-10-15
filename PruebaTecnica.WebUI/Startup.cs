@@ -16,6 +16,7 @@ using PruebaTecnica.Domain.Abstract;
 using PruebaTecnica.Domain.Implements;
 using AutoMapper;
 using PruebaTecnica.Domain.DTOs;
+using Newtonsoft.Json;
 
 namespace PruebaTecnica.WebUI
 {
@@ -48,10 +49,17 @@ namespace PruebaTecnica.WebUI
             services.AddTransient<IMunicipioRepository, MunicipioRepository>();
             services.AddTransient<IRegionRepository,RegionRepository>();
             services.AddTransient<IStatusRepository, StatusRepository>();
+            services.AddTransient<IRegionMunicipioRepository, RegionMunicipioRepository>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            //.AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-            services.AddMvc(options => options.EnableEndpointRouting = false);
+
+            services.AddMvc(options => options.EnableEndpointRouting = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

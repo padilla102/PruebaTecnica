@@ -61,7 +61,7 @@ namespace PruebaTecnica.Domain.Implements
                     {
                         m.Name = municipio.Name;
                         m.StatusId = municipio.StatusId;
-                        m.RegionId = municipio.RegionId;
+                        //m.RegionId = municipio.RegionId;
                     }
                 }
                 context.SaveChanges();
@@ -77,7 +77,11 @@ namespace PruebaTecnica.Domain.Implements
         {
             try
             {
-                var m = context.Municipio.Find(id);
+                var m = context.Municipio
+                    .Include(rm=>rm.RegionMunicipio)
+                    .FirstOrDefault(m => m.Id == id);
+
+                m.RegionMunicipio = context.RegionMunicipio.Include(m => m.Region).Where(rm => rm.MunicipioId == m.Id).ToList();
                 return m!= null ? m: throw new Exception("Municipio no encotrado");
             }
             catch (Exception ex)
@@ -90,7 +94,8 @@ namespace PruebaTecnica.Domain.Implements
         {
             try
             {
-                return context.Municipio.Include(x =>x.Status).Include(r=>r.Region).ToList();
+                //TODO: Cambiar
+                return context.Municipio.Include(x => x.Status).ToList();
             }
             catch (Exception ex)
             {
