@@ -77,6 +77,15 @@ namespace PruebaTecnica.DomainTest
                 new Municipio{Id=5, Name = "Municipio5",StatusId = 1}
             }).AsQueryable<Municipio>());
 
+            mock1.Setup(m => m.Get(1)).Returns(
+                new Municipio { Id = 1, Name = "Municipio1", StatusId = 1 });
+
+            mock1.Setup(m => m.Get(2)).Returns(
+                new Municipio { Id = 2, Name = "Municipio2", StatusId = 1 });
+
+            mock1.Setup(m => m.Get(3)).Returns(
+                new Municipio { Id = 3, Name = "Municipio3", StatusId = 1 });
+
             Mock<IStatusRepository> mock2 = new Mock<IStatusRepository>();
 
             MunicipioController controller = new MunicipioController(mock1.Object, mock2.Object);
@@ -86,9 +95,9 @@ namespace PruebaTecnica.DomainTest
             MunicipioViewModel m2 = GetViewModel<MunicipioViewModel>(controller.Edit(2));
             MunicipioViewModel m3 = GetViewModel<MunicipioViewModel>(controller.Edit(3));
             // Verificación
-            Assert.Equals(1, m1.Municipio.Id);
-            Assert.Equals(3, m3.Municipio.Id);
-            Assert.Equals(2, m2.Municipio.Id);
+            Assert.AreEqual(1, m1.Municipio.Id);
+            Assert.AreEqual(3, m3.Municipio.Id);
+            Assert.AreEqual(2, m2.Municipio.Id);
         }
 
         [TestMethod]
@@ -127,8 +136,9 @@ namespace PruebaTecnica.DomainTest
             MunicipioViewModel vm = new MunicipioViewModel { Municipio = new Municipio { Name = "Test" } };
             var result = controller.Edit(vm);
             mock1.Verify(m => m.Save(vm.Municipio));
+
             // Verificación
-            Assert.Equals("List", (result as RedirectToActionResult).ActionName);
+            Assert.AreEqual("List", (result as RedirectToActionResult).ActionName);
         }
 
         [TestMethod]
