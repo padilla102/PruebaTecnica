@@ -16,7 +16,7 @@ namespace PruebaTecnica.WebUI.Controllers
     {
         private readonly IMunicipioRepository repository;
         private readonly IStatusRepository repoStatus;
-        public int PageSize = 4;
+        public int PageSize = 6;
 
         public MunicipioController(IMunicipioRepository repository, IStatusRepository repoStatus)
         {
